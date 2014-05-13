@@ -2,6 +2,7 @@ import json
 import urllib2
 import urllib
 import os
+import ast
 
 DISTANCE_MATRIX_URL = "http://maps.googleapis.com/maps/api/distancematrix/"
 
@@ -28,4 +29,10 @@ class DM(object):
 
         ret = urllib2.urlopen(url + '?' + url_values)
 
-        print ret.readlines()
+        return ret
+
+
+if __name__ == "__main__":
+    a = DM().get_distance('41.133649, 1.247142', '41.129085, 1.242108')
+    d = ast.literal_eval(a.read())
+    print d['rows'][0]['elements'][0]['distance']['value']  # Meters
