@@ -2,6 +2,7 @@ import json
 import urllib2
 import urllib
 import os
+import copy
 import ast
 import operator
 
@@ -89,30 +90,23 @@ class DM(object):
         """
         return self.__get_response_element_data('duration', 'text')
 
-    def get_closest_points(self, num=10, origin_index=0, origin_raw=None):
+    def get_closest_points(self, max_distance=None, num=10, origin_index=0, origin_raw=None):
         """
         Get closest points to a given origin. Returns a list of 2 element tuples where first element is the destination and the second is the distance.
         """
+        if not self.dict_response['distance']['value']:
+            self.get_distance_values()
 
-        if self.dict_response['distance']['value']:
-            if origin_raw:
-                return sorted(self.dict_response['distance']['value'][origin_raw].iteritems(), key=operator.itemgetter(1))[:num]
-            else:
-                return sorted(self.dict_response['distance']['value'][self.origins[origin_index]].iteritems(), key=operator.itemgetter(1))[:num]
+        if origin_raw:
+            origin = copy.deepcopy(self.dict_response['distance']['value'][origin_raw])
         else:
-            if origin_raw:
-                return sorted(self.get_distance_values()[origin_raw].iteritems(), key=operator.itemgetter(1))[:num]
-            else:
-                return sorted(self.get_distance_values()[self.origins[origin_index]].iteritems(), key=operator.itemgetter(1))[:num]
+            origin = copy.deepcopy(self.dict_response['distance']['value'][self.origins[origin_index]])
 
+        tmp_origin = copy.deepcopy(origin)
+        if max_distance:
+            for k, v in tmp_origin.iteritems():
+                if v > max_distance:
+                    del(origin[k])
 
-if __name__ == "__main__":
-
-    a = DM()
-    # a.make_request('Boscos de Tarragona 12 Tarragona Spain', '42.133649, 1.247142', mode="walking")
-    # a.make_request('Boscos de Tarragona 12 Tarragona Spain', '42.133649, 1.247142', mode="driving")
-    # a.make_request(['Avinguda Paisos Catalans 26 Spain', '42.133649, 1.247142'], ['41.129085, 1.244108', '41.129085, 1.242108', '41.129085, 1.243108'])
-    a.make_request(['Avinguda Paisos Catalans 26 Spain'], ['41.129085, 1.244108', '41.129085, 1.242108', '41.129085, 1.243108', '41.139085, 1.244108', '41.120085, 1.444108', '41.129087, 1.244108', '42.129085, 1.244108' ])
-    print a.get_distance_values()
-    print a.get_closest_points(num=2)
-    # print a.get_closest_points(origin_raw='Avinguda Paisos Catalans 26 Spain')
+        if origin:
+            return sorted(origin.iteritems(), key=operator.itemgetter(1))[:num]
