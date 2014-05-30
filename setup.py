@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name='google-distance-matrix',
-    version='0.1.3',
+    version='0.1.7',
     packages=['google_distance_matrix'],
     author='Manuel Miranda de Cid',
     author_email='manu.mirandad@gmail.com',

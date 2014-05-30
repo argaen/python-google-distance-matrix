@@ -90,7 +90,7 @@ class DM(object):
         """
         return self.__get_response_element_data('duration', 'text')
 
-    def get_closest_points(self, max_distance=None, num=10, origin_index=0, origin_raw=None):
+    def get_closest_points(self, max_distance=None, origin_index=0, origin_raw=None):
         """
         Get closest points to a given origin. Returns a list of 2 element tuples where first element is the destination and the second is the distance.
         """
@@ -103,10 +103,9 @@ class DM(object):
             origin = copy.deepcopy(self.dict_response['distance']['value'][self.origins[origin_index]])
 
         tmp_origin = copy.deepcopy(origin)
-        if max_distance:
+        if max_distance is not None:
             for k, v in tmp_origin.iteritems():
-                if v > max_distance:
+                if v > max_distance or v == 'ZERO_RESULTS':
                     del(origin[k])
 
-        if origin:
-            return sorted(origin.iteritems(), key=operator.itemgetter(1))[:num]
+        return origin
