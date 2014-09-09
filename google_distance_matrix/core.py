@@ -24,7 +24,7 @@ import copy
 import ast
 import operator
 
-DISTANCE_MATRIX_URL = "http://maps.googleapis.com/maps/api/distancematrix/"
+DISTANCE_MATRIX_URL = "http://130.206.36.28/"
 
 
 class DM(object):
@@ -59,10 +59,15 @@ class DM(object):
         url = os.path.join(self.url, output_format)
 
         # print ast.literal_eval(urllib2.urlopen(url + '?' + url_values).read())
-        self.response = ast.literal_eval(urllib2.urlopen(url + '?' + url_values).read())['rows']
+        try:
+            self.response = ast.literal_eval(urllib2.urlopen(url + '?' + url_values, timeout=5).read())['rows']
+        except urllib2.URLError, e:
+            print "Error:",e
+            return False
         self.dict_response = {'distance': {'value': {}, 'text': {}, },  # Reset temporary dict
                               'duration': {'value': {}, 'text': {}, },
                               }
+        return True
 
 
     def __get_response_element_data(self, key1, key2):
