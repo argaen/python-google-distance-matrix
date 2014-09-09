@@ -24,7 +24,7 @@ import copy
 import ast
 import operator
 
-DISTANCE_MATRIX_URL = "http://130.206.36.28/"
+DISTANCE_MATRIX_URL = "http://maps.googleapis.com/maps/api/distancematrix/"
 
 
 class DM(object):
