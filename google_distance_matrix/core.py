@@ -59,11 +59,7 @@ class DM(object):
         url = os.path.join(self.url, output_format)
 
         # print ast.literal_eval(urllib2.urlopen(url + '?' + url_values).read())
-        try:
-            self.response = ast.literal_eval(urllib2.urlopen(url + '?' + url_values, timeout=5).read())['rows']
-        except urllib2.URLError, e:
-            print "Error:",e
-            return False
+        self.response = ast.literal_eval(urllib2.urlopen(url + '?' + url_values, timeout=5).read())['rows']
         self.dict_response = {'distance': {'value': {}, 'text': {}, },  # Reset temporary dict
                               'duration': {'value': {}, 'text': {}, },
                               }
