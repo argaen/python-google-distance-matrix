@@ -45,7 +45,7 @@ class DM(object):
         self.origins = ''
         self.destinations = ''
 
-    def make_request(self, origins, destinations, mode='driving'):
+    def make_request(self, origins, destinations, mode='driving', timeout=None):
         data = {}
         self.origins = [origins] if type(origins) == str else origins
         self.destinations = [destinations] if type(destinations) == str else destinations
@@ -59,7 +59,7 @@ class DM(object):
         url = os.path.join(self.url, output_format)
 
         # print ast.literal_eval(urllib2.urlopen(url + '?' + url_values).read())
-        self.response = ast.literal_eval(urllib2.urlopen(url + '?' + url_values, timeout=5).read())['rows']
+        self.response = ast.literal_eval(urllib2.urlopen(url + '?' + url_values, timeout=timeout).read())['rows']
         self.dict_response = {'distance': {'value': {}, 'text': {}, },  # Reset temporary dict
                               'duration': {'value': {}, 'text': {}, },
                               }
